@@ -37,6 +37,24 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b6ad6d73-1dc3-4a5d-8e78-cf144083038c"
+      }
+    },
+    "owner": "awaris07",
+    "plugins": [
+      "react-native-bottom-tabs",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    
+    ]   
   }
 }

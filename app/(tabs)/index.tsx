@@ -1,75 +1,97 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import 'react-native-get-random-values'; // polyfill for RN
+import { v4 as uuidv4 } from 'uuid';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { useState } from "react";
+import { Pressable, StyleSheet, useColorScheme } from "react-native";
+import { FlatList } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+function handleEventPress(){
+    console.log("Pressed!");
+}
 
-export default function HomeScreen() {
+const MOCK_POSTS = [
+  { id: '1', author: 'Mom', time: '09:15', message: 'Morning walk 🌳' },
+  { id: '2', author: 'Dad', time: '12:15', message: 'Lunch 🍔' },
+]
+
+export default function Tab() {
+
+  const [posts, setPosts] = useState(MOCK_POSTS);
+
+  function handleAddPost(){
+    const newPost = {
+      id: uuidv4(),
+      author: "You",
+      time: new Date().toLocaleTimeString(),
+      message: "Test Post!"
+    }
+    setPosts([newPost, ...posts]);
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ThemedView style={{flex:1}}>
+    <ThemedView style={styles.titleContainer}>
+      <ThemedText type="title">Family Thread</ThemedText>
+      <ThemedText type="title">Friday, October 4</ThemedText>
+    </ThemedView>
+
+    <Pressable onPress = {handleEventPress} accessibilityRole="button" hitSlop={{ top: 8, left: 8, right: 8, bottom: 8 }}>
+        <ThemedText>Add Daily Event</ThemedText>
+    </Pressable>
+
+    <ThemedView style={styles.titleContainer}>
+      <ThemedText type="subtitle">Today's Posts</ThemedText>
+    </ThemedView>
+
+    <ThemedView style={{paddingBottom:150}}>
+      <FlatList 
+      data={posts}
+      keyExtractor={(item) => item.id}
+      renderItem={({item}) => (
+        <ThemedView>
+          <ThemedText type="subtitle">{item.author} · {item.time}</ThemedText>
+          <ThemedText>{item.message}</ThemedText>
+        </ThemedView>
+        
+      )}
+      ListEmptyComponent={
+        <ThemedText>No posts yet today!</ThemedText>
+      }
+      />
+    </ThemedView>
+
+    <Pressable style={styles.floatingContainer} onPress={handleAddPost}>
+      <ThemedText>+</ThemedText>
+    </Pressable>
+
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+
+  floatingContainer: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "green"
+  }
+  
 });
