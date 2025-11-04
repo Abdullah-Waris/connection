@@ -2,19 +2,29 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, StyleSheet, Text, View, Image } from "react-native";
 import { useEffect, useState } from "react";
 import {Picker} from "@react-native-picker/picker"
 
-const MOCK_ARCHIVE = [
-  { id: uuidv4(), author: 'Mom', time: '09:15', message: 'Morning walk 🌳', date: [2025, 7, 29] },
+type Archive = {
+  id: string;
+  author: string;
+  time: string;
+  message: string;
+  date: [number, number, number];
+  image?: string;
+}
+
+const MOCK_ARCHIVE: Archive[] = [
+  { id: uuidv4(), author: 'Mom', time: '09:15', message: 'Morning walk 🌳', date: [2025, 7, 29], image: 'file:///var/mobile/Containers/Data/Application/347AFDCA-7F51-49A5-8C0C-B75E0B4BA371/Library/Caches/ExponentExperienceData/@awaris07/connection/ImagePicker/8888E5FC-42F8-41FD-8BA6-4C2E39DB2933.png' },
   { id: uuidv4(), author: 'Dad', time: '12:15', message: 'Lunch 🍔', date: [2025, 7, 4]},
-  { id: uuidv4(), author: 'Tom', time: '02:00', message: 'FUN! YAY', date: [2025, 7, 4]}
+  { id: uuidv4(), author: 'Tom', time: '02:00', message: 'FUN! YAY', date: [2025, 7, 4]},
+  { id: uuidv4(), author: 'Joe', time: '02:01', message: 'FUN! YA', date: [2025, 7, 4]}
   ]
 
 export default function Tab() {
 
-  const[current, setCurrent] = useState(new Date);
+  const[current, setCurrent] = useState(new Date());
   const[pickerVisible, setPickerVisible] = useState(false);
   const[draftMonth, setDraftMonth] = useState(current.getMonth());
   const[draftYear, setDraftYear] = useState(current.getFullYear());
@@ -68,6 +78,35 @@ export default function Tab() {
   }
 
   const title = current.toLocaleString(undefined, {month: "long", year: "numeric"});
+
+  const monthly = archive
+  .filter(e => e.date[0] === draftYear && e.date[1] === draftMonth)
+  .sort((a,b)=>a.date[2]-b.date[2]);
+
+  let lastDay: number | null=null;
+  const rows : React.ReactNode[] = [];
+
+  for(const entry of monthly){
+    const [, , d] = entry.date;
+    if(d != lastDay){
+      rows.push(
+        <ThemedView key={`day-${draftYear}-${draftMonth}-${d}`}>
+        <ThemedText type="title" style={styles.subtitle}>
+          {MONTHS[draftMonth].label + " "}{d}
+        </ThemedText>
+      </ThemedView>
+      );
+      lastDay=d;
+    }
+
+    rows.push(
+    <ThemedView key={entry.id}>
+      <ThemedText type="subtitle">{entry.author} · {entry.time}</ThemedText>
+        {entry.image && <Image source={{ uri: entry.image }} style={{ width: 200, height: 200 }} />} 
+      <ThemedText>{entry.message}</ThemedText>
+    </ThemedView>
+  );
+  }
 
   return (
     <ThemedView>
@@ -131,35 +170,9 @@ export default function Tab() {
     </Modal>
 
     <ThemedView>
-      {archive
-      .filter(e => e.date[0] === draftYear && e.date[1] === draftMonth)
-      .map((entry) => {
-        const [y, m, d] = entry.date;
-        const matches = MOCK_ARCHIVE.filter(a => 
-          a.date[0] == draftYear &&
-          a.date[1] == draftMonth &&
-          a.date[2] == d
-        );
-
-        if(matches.length==0) return null;
-
-        return(
-        <ThemedView key={`day-${y}-${m}-${d}`}>
-          <ThemedView>
-            <ThemedText type="title" style={styles.subtitle}>
-              {MONTHS[draftMonth].label + " "}
-              {d}
-            </ThemedText>
-            {matches.map((a) => (
-            <ThemedView key={a.id ?? `post-${a.author}-${a.time}`}>
-              <ThemedText type="subtitle">{a.author} · {a.time}</ThemedText>
-              <ThemedText>{a.message}</ThemedText>
-            </ThemedView>
-            ))}
-          </ThemedView>
+        <ThemedView key={uuidv4()}>
+          {rows}
         </ThemedView>
-        )
-      })}
     </ThemedView>
     
     </ThemedView>
@@ -188,7 +201,7 @@ const styles = StyleSheet.create({
   pickerSheet: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     borderBottomLeftRadius: 16,
@@ -213,7 +226,7 @@ const styles = StyleSheet.create({
     alignItems:"center",
     flexDirection:"row",
     paddingHorizontal: 80,
-    backgroundColor: 'black',
+    backgroundColor: 'white',
   },
   subtitle: {
     flexDirection:"row",

@@ -3,15 +3,33 @@ import { v4 as uuidv4 } from 'uuid';
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useState } from "react";
-import { Modal, Pressable, StyleSheet, useColorScheme } from "react-native";
+import { Modal, Pressable, StyleSheet, TextInput, Image, useColorScheme } from "react-native";
 import { FlatList } from 'react-native';
 import ImagePickerTile from '@/components/ImagePickerTile';
+
 
 function handleEventPress(){
     console.log("Pressed!");
 }
 
-const MOCK_POSTS = [
+type Post={
+  id: string,
+  author: string,
+  time: string,
+  message: string,
+  date: [number, number, number]
+  image?: string
+}
+
+  const placeholderPost : Post={
+      id: "Placeholder",
+      author: "Placeholder",
+      time: "Placeholder",
+      message: "PlaceHolder",
+      date: [1, 1, 1],
+  }
+
+const MOCK_POSTS: Post[] = [
   { id: '1', author: 'Mom', time: '09:15', message: 'Morning walk 🌳', date: [2025, 9, 29]},
   { id: '2', author: 'Dad', time: '12:15', message: 'Lunch 🍔', date: [2025, 9, 29]},
 ]
@@ -20,6 +38,14 @@ export default function Tab() {
 
   const [posts, setPosts] = useState(MOCK_POSTS);
   const [pickerVisible, setPickerVisible] = useState(false);
+  const [text, setText] = useState("");
+  const [uri, setUri] = useState<string | undefined>(undefined);
+
+  const date: [number, number, number] = [
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    new Date().getDate(),
+    ];
 
   function handleQuickAddPost(){
     const newPost = {
@@ -27,8 +53,32 @@ export default function Tab() {
       author: "You",
       time: new Date().toLocaleTimeString(),
       message: "Test Post!",
-      date: [new Date().getFullYear(), new Date().getMonth(), new Date().getDay()],
+      date,
     }
+    setPosts([newPost, ...posts]);
+  }
+
+  function handleDonePress(){
+    setPickerVisible(false);
+    placeholderPost.message = text;
+    placeholderPost.image = uri;
+    console.log(uri);
+    const newPostBase = {
+      id: uuidv4(),
+      author: "You",
+      time: new Date().toLocaleTimeString(),
+      message: placeholderPost.message,
+      date,
+    }
+
+    const newPost: Post= {
+      ...newPostBase,
+      ...(placeholderPost.image?{image: placeholderPost.image}: {}),
+    };
+
+    console.log(posts);
+    setUri(undefined);
+    setText("");
     setPosts([newPost, ...posts]);
   }
 
@@ -49,21 +99,34 @@ export default function Tab() {
 
     <Modal visible={pickerVisible} transparent animationType="slide" style={styles.modalContainer}>
       <ThemedView style={styles.modalContainer}>
-        <ThemedView style={styles.fieldSheet}>
+      <ThemedView style={styles.fieldSheet}>
       <ThemedView>
         <ThemedText type="subtitle">New Message</ThemedText>
         <ImagePickerTile
           size={140}
           label='Add Image'
-          onPicked={(uri)=>{
-            console.log("Picked Image ", uri);
+          onPicked={(newUri)=>{
+            setUri(newUri);
           }}
         />
+
+        <ThemedView style={styles.boxDescription}>
+          <ThemedText>Message: </ThemedText>
+          <TextInput value={text} 
+          onChangeText={setText} 
+          placeholder='Input Messsage'
+          />
+        </ThemedView>
       </ThemedView>
 
-      <Pressable onPress={()=>setPickerVisible(false)}>
-        <ThemedText >Done</ThemedText>
-      </Pressable>
+      <ThemedView style={{flexDirection: "row", width: "50%", justifyContent: "space-between"}}>
+        <Pressable onPress={()=>setPickerVisible(false)}>
+          <ThemedText>Cancel</ThemedText>
+        </Pressable>
+        <Pressable onPress={handleDonePress}>
+          <ThemedText>Done</ThemedText>
+        </Pressable>
+      </ThemedView>
       </ThemedView>
       </ThemedView>
     </Modal>
@@ -75,6 +138,9 @@ export default function Tab() {
       renderItem={({item}) => (
         <ThemedView>
           <ThemedText type="subtitle">{item.author} · {item.time}</ThemedText>
+          {item.image && (
+            <Image source={{uri:item.image}} style={{ width: 200, height: 200 }} />
+          )}
           <ThemedText>{item.message}</ThemedText>
         </ThemedView>
         
@@ -144,7 +210,7 @@ const styles = StyleSheet.create({
   picker: {
     height: 216, // standard iOS picker height
     width: '100%',
-    color: "rgba(255, 255, 255, 1)"
+    color: "rgba(0, 0, 0, 1)"
   },
   pickerRow: {
     alignItems:"center",
@@ -152,4 +218,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 80,
     backgroundColor: 'black',
   },
+  boxDescription: {
+    flexDirection:"row",
+    alignItems: "center"
+  }
 });

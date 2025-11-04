@@ -1,9 +1,21 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
+import { Tabs, router } from 'expo-router';
+import { Pressable, Text } from 'react-native'
+
 
 export default function TabLayout(){
     return(
-        <Tabs screenOptions={{tabBarActiveTintColor: "blue"}}>
+        <Tabs
+        screenOptions={{
+            tabBarActiveTintColor: 'blue',
+            headerRight: () =>
+            __DEV__ ? (
+                <Pressable onPress={() => router.push('/playground')} style={{ paddingRight: 12 }}>
+                <Text>PG</Text>
+                </Pressable>
+            ) : null,
+        }}
+        >
             <Tabs.Screen
                 name = "index"
                 options = {{
