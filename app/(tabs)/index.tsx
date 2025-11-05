@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Modal, Pressable, StyleSheet, TextInput, Image, useColorScheme } from "react-native";
 import { FlatList } from 'react-native';
 import ImagePickerTile from '@/components/ImagePickerTile';
+import { useApp } from "../context/AppContext";
 
 
 function handleEventPress(){
@@ -76,10 +77,14 @@ export default function Tab() {
       ...(placeholderPost.image?{image: placeholderPost.image}: {}),
     };
 
-    console.log(posts);
     setUri(undefined);
     setText("");
     setPosts([newPost, ...posts]);
+  }
+
+  function handleCancelPress(){
+      setPickerVisible(false);
+      setUri(undefined);
   }
 
   return (
@@ -120,7 +125,7 @@ export default function Tab() {
       </ThemedView>
 
       <ThemedView style={{flexDirection: "row", width: "50%", justifyContent: "space-between"}}>
-        <Pressable onPress={()=>setPickerVisible(false)}>
+        <Pressable onPress={handleCancelPress}>
           <ThemedText>Cancel</ThemedText>
         </Pressable>
         <Pressable onPress={handleDonePress}>
