@@ -6,21 +6,7 @@ import { useState } from "react";
 import { Modal, Pressable, StyleSheet, TextInput, Image, useColorScheme } from "react-native";
 import { FlatList } from 'react-native';
 import ImagePickerTile from '@/components/ImagePickerTile';
-import { useApp } from "../context/AppContext";
-
-
-function handleEventPress(){
-    console.log("Pressed!");
-}
-
-type Post={
-  id: string,
-  author: string,
-  time: string,
-  message: string,
-  date: [number, number, number]
-  image?: string
-}
+import { useApp, Post, Archive } from "../context/AppContext";
 
   const placeholderPost : Post={
       id: "Placeholder",
@@ -30,14 +16,8 @@ type Post={
       date: [1, 1, 1],
   }
 
-const MOCK_POSTS: Post[] = [
-  { id: '1', author: 'Mom', time: '09:15', message: 'Morning walk 🌳', date: [2025, 9, 29]},
-  { id: '2', author: 'Dad', time: '12:15', message: 'Lunch 🍔', date: [2025, 9, 29]},
-]
-
 export default function Tab() {
-
-  const [posts, setPosts] = useState(MOCK_POSTS);
+  const { posts, setPosts } = useApp();
   const [pickerVisible, setPickerVisible] = useState(false);
   const [text, setText] = useState("");
   const [uri, setUri] = useState<string | undefined>(undefined);
@@ -187,7 +167,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "green"
   },
-
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -211,17 +190,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 8,
-  },
-  picker: {
-    height: 216, // standard iOS picker height
-    width: '100%',
-    color: "rgba(0, 0, 0, 1)"
-  },
-  pickerRow: {
-    alignItems:"center",
-    flexDirection:"row",
-    paddingHorizontal: 80,
-    backgroundColor: 'black',
   },
   boxDescription: {
     flexDirection:"row",

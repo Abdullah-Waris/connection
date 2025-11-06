@@ -35,28 +35,20 @@ export default function Tab() {
   }));
 
   function handleFArrow(){
-    console.log("current"+current.getMonth());
-    console.log("draft"+draftMonth);
     const next = new Date(current.getFullYear(), current.getMonth()+1, 1);
     setCurrent(next);
     const month = next.getMonth();
     const year = next.getFullYear();
     setDraftMonth(month);
     setDraftYear(year);
-    console.log("current"+current.getMonth());
-    console.log("draft"+draftMonth);
   }
   function handleBArrow(){
-    console.log("current"+current.getMonth());
-    console.log("draft"+draftMonth);
     const next = new Date(current.getFullYear(), current.getMonth()-1, 1);
     setCurrent(next);
     const month = next.getMonth();
     const year = next.getFullYear();
     setDraftMonth(month);
     setDraftYear(year);
-    console.log("current"+current.getMonth());
-    console.log("draft"+draftMonth);
   }
 
   useEffect(() => {
