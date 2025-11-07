@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState } from "react";
+import 'react-native-get-random-values';
 import { v4 as uuidv4 } from "uuid";
+
+
+
+export type ThemeMode = "light" | "dark";
 
 export type Archive = {
   id: string;
@@ -59,6 +64,8 @@ type AppContextType = {
   setTotalPosts: React.Dispatch<React.SetStateAction<number>>
   people: Person[];
   setPeople: React.Dispatch<React.SetStateAction<Person[]>>;
+  theme: ThemeMode;
+  setTheme: React.Dispatch<React.SetStateAction<ThemeMode>>;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -70,8 +77,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [displayName, setDisplayName] = useState<string|undefined>(undefined);
   const [totalPosts, setTotalPosts] = useState<number>(0);
   const [people, setPeople] = useState(MOCK_PEOPLE);
+  const [theme, setTheme] = useState<ThemeMode>("light");
   return (
-    <AppContext.Provider value={{ archive, posts, setPosts, avatar, setAvatar, displayName, setDisplayName, totalPosts, setTotalPosts, people, setPeople }}>
+    <AppContext.Provider value={{ archive, posts, setPosts, avatar, setAvatar, displayName, setDisplayName, totalPosts, setTotalPosts, people, setPeople, theme, setTheme }}>
       {children}
     </AppContext.Provider>
   );
