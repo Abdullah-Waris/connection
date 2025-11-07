@@ -53,8 +53,6 @@ export default function Tab() {
 
   useEffect(() => {
     setCurrent(d => new Date(d.getFullYear(), d.getMonth(), 1));
-    console.log("Initial Current: "+current.getMonth());
-    console.log("Initial Draft: "+draftMonth);
   }, [])
 
   function handleDonePress(){

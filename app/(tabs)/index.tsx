@@ -21,6 +21,7 @@ export default function Tab() {
   const [pickerVisible, setPickerVisible] = useState(false);
   const [text, setText] = useState("");
   const [uri, setUri] = useState<string | undefined>(undefined);
+  const {totalPosts, setTotalPosts} = useApp();
 
   const date: [number, number, number] = [
     new Date().getFullYear(),
@@ -36,6 +37,7 @@ export default function Tab() {
       message: "Test Post!",
       date,
     }
+    setTotalPosts(totalPosts+1);
     setPosts([newPost, ...posts]);
   }
 
@@ -43,7 +45,7 @@ export default function Tab() {
     setPickerVisible(false);
     placeholderPost.message = text;
     placeholderPost.image = uri;
-    console.log(uri);
+    setTotalPosts(totalPosts+1);
     const newPostBase = {
       id: uuidv4(),
       author: "You",

@@ -4,12 +4,12 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import { useState } from "react";
 import { Modal, Pressable, StyleSheet, FlatList, Text, View } from "react-native";
-import { useApp } from "../context/AppContext";
+import { useApp, Person } from "../context/AppContext";
 import {Picker} from "@react-native-picker/picker"
 
 export default function Tab() {
 
-  const { posts, archive } = useApp();
+  const { posts, archive, people, setPeople } = useApp();
   const [ timePicker, setTimePicker ] = useState(false);
   const [draftHour, setDraftHour] = useState<Number|undefined>(undefined);
   const [draftMinute, setDraftMinute] = useState<Number|undefined>(undefined);
@@ -17,17 +17,6 @@ export default function Tab() {
   const [hour, setHour] = useState<Number|undefined>(undefined);
   const [minute, setMinute] = useState<Number|undefined>(undefined);
   const [section, setSection] = useState<string|undefined>(undefined);
-
-  type Person = {
-    id: string,
-    name: string
-  }
-
-  const MOCK_PEOPLE: Person[] = [
-    {id: uuidv4(), name: "Mom"},
-    {id: uuidv4(), name: "Dad"},
-    {id: uuidv4(), name: "You"}
-  ]
 
   const HOURS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
   let MINUTES = [];
@@ -98,7 +87,7 @@ export default function Tab() {
       </ThemedView>
 
       <FlatList
-      data = {MOCK_PEOPLE}
+      data = {people}
       keyExtractor={(item)=>item.id}
       renderItem={({item}) => (
         <ThemedView>
