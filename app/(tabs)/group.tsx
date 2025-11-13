@@ -20,11 +20,11 @@ export default function Tab() {
   const { posts, archive, people, theme, setTheme } = useApp();
   const isDark = theme === "dark";
   const [timePicker, setTimePicker] = useState(false);
-  const [draftHour, setDraftHour] = useState<Number | undefined>(undefined);
-  const [draftMinute, setDraftMinute] = useState<Number | undefined>(undefined);
-  const [draftSection, setDraftSection] = useState<string | undefined>(undefined);
-  const [hour, setHour] = useState<Number | undefined>(undefined);
-  const [minute, setMinute] = useState<Number | undefined>(undefined);
+  const [draftHour, setDraftHour] = useState<string | undefined>("1");
+  const [draftMinute, setDraftMinute] = useState<string | undefined>("00");
+  const [draftSection, setDraftSection] = useState<string | undefined>("AM");
+  const [hour, setHour] = useState<string | undefined>(undefined);
+  const [minute, setMinute] = useState<string | undefined>(undefined);
   const [section, setSection] = useState<string | undefined>(undefined);
 
   const palette = isDark
@@ -121,10 +121,10 @@ export default function Tab() {
           </ThemedText>
           <View style={styles.inlineButtons}>
             <Pressable onPress={() => console.log("LINK!")} style={[styles.secondaryBtn, { borderColor: palette.border }]}> 
-              <ThemedText style={{ color: palette.text }}>[Copy Invite Link]</ThemedText>
+              <ThemedText style={{ color: palette.text }}>Copy Invite Link</ThemedText>
             </Pressable>
             <Pressable onPress={() => console.log("QR CODE!")} style={[styles.secondaryBtn, { borderColor: palette.border }]}> 
-              <ThemedText style={{ color: palette.text }}>[QR Code]</ThemedText>
+              <ThemedText style={{ color: palette.text }}>QR Code</ThemedText>
             </Pressable>
           </View>
         </View>
@@ -163,7 +163,7 @@ export default function Tab() {
             Daily Reminder: {hour ? `${hour}:${minute} ${section}` : "None Set"}
           </ThemedText>
           <Pressable onPress={handleSetReminder} style={[styles.primaryBtn, { backgroundColor: palette.accent }]}> 
-            <ThemedText style={{ color: "#fff", fontWeight: "600" }}>[Change Reminder]</ThemedText>
+            <ThemedText style={{ color: "#fff", fontWeight: "600" }}>Change Reminder</ThemedText>
           </Pressable>
         </View>
 
@@ -182,9 +182,10 @@ export default function Tab() {
                 selectedValue={draftHour}
                 onValueChange={(v) => setDraftHour(v)}
                 style={[styles.picker, { color: palette.text }]}
+                itemStyle={{ color: palette.text }}
               >
                 {HOURS.map((m) => (
-                  <Picker.Item key={uuidv4()} label={m.toString()} value={m} />
+                  <Picker.Item key={uuidv4()} label={m.toString()} value={m} color={palette.text} />
                 ))}
               </Picker>
 
@@ -192,9 +193,10 @@ export default function Tab() {
                 selectedValue={draftMinute}
                 onValueChange={(v) => setDraftMinute(v)}
                 style={[styles.picker, { color: palette.text }]}
+                itemStyle={{ color: palette.text }}
               >
                 {MINUTES.map((m) => (
-                  <Picker.Item key={uuidv4()} label={m.toString()} value={m} />
+                  <Picker.Item key={uuidv4()} label={m.toString()} value={m} color={palette.text} />
                 ))}
               </Picker>
 
@@ -202,9 +204,10 @@ export default function Tab() {
                 selectedValue={draftSection}
                 onValueChange={(v) => setDraftSection(v)}
                 style={[styles.picker, { color: palette.text }]}
+                itemStyle={{ color: palette.text }}
               >
-                <Picker.Item key={uuidv4()} label={"AM"} value={"AM"} />
-                <Picker.Item key={uuidv4()} label={"PM"} value={"PM"} />
+                <Picker.Item key={uuidv4()} label={"AM"} value={"AM"} color={palette.text} />
+                <Picker.Item key={uuidv4()} label={"PM"} value={"PM"} color={palette.text} />
               </Picker>
             </View>
             <View style={styles.modalActions}>
@@ -212,7 +215,7 @@ export default function Tab() {
                 <ThemedText style={{ color: palette.subtext }}>Cancel</ThemedText>
               </Pressable>
               <Pressable onPress={handleDonePress}>
-                <ThemedText style={{ color: palette.accent, fontWeight: "600" }}>Done</ThemedText>
+                <ThemedText style={{ color: palette.text, fontWeight: "600" }}>Done</ThemedText>
               </Pressable>
             </View>
           </View>

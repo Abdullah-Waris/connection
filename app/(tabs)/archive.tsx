@@ -160,6 +160,7 @@ export default function Tab() {
                   selectedValue={draftMonth}
                   onValueChange={(v) => setDraftMonth(v)}
                   style={[styles.picker, { color: palette.text }]}
+                  itemStyle={{ color: palette.text }}
                 >
                   {MONTHS.map((m) => (
                     <Picker.Item key={m.value} label={m.label} value={m.value} />
@@ -172,6 +173,7 @@ export default function Tab() {
                   selectedValue={draftYear}
                   onValueChange={(v) => setDraftYear(v)}
                   style={[styles.picker, { color: palette.text }]}
+                  itemStyle={{ color: palette.text }}
                 >
                   {YEARS.map((m) => (
                     <Picker.Item key={m.value} label={m.label} value={m.value} />
